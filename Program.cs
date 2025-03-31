@@ -4,26 +4,37 @@ using System.Windows.Forms;
 class MainForm : Form
 {
     private TextBox textBox = null!;
+    private Label stateLabel = null!;
+    private Size WindowSize;
 
-    public void RenderTextBox(Size WindowSize) 
+    public void RenderMessage(String message) 
     {
-        textBox = new TextBox();
-        textBox.Size = new Size((int)(WindowSize.Width / 1.5), WindowSize.Height / 10);
-        textBox.Multiline = true;
-        textBox.Location = new Point(
-            (int)(WindowSize.Width / 10),
-            (int)(WindowSize.Height - 100)
-        );
+        Label label = new Label();
+        label.Text = message; 
+        label.Font = new Font("Arial", 16);
+        label.Location = new Point(50, 50);
+        label.AutoSize = true; 
 
-        textBox.BorderStyle = BorderStyle.FixedSingle;
-        
-        Controls.Add(textBox);
+        label.BackColor = Color.LightBlue; 
+        label.ForeColor = Color.Black;
+
+        Controls.Add(label);
     }
 
-    public void RenderButtons(Size WindowSize) 
+    public void RenderState() 
+    {
+        stateLabel = new();
+        stateLabel.Text = "Loading";
+        stateLabel.Font = new Font("Arial", 24);
+        stateLabel.Location = new Point(WindowSize.Width / 2, WindowSize.Height / 2);
+
+        Controls.Add(stateLabel);
+    }
+
+    public void RenderBase() 
     {
         Button btn = new Button();
-        btn.Text = "CLICK";
+        btn.Text = "Send";
         btn.Size = new Size(WindowSize.Width / 10, WindowSize.Height / 10);
         btn.Location = new Point
         (
@@ -34,19 +45,32 @@ class MainForm : Form
 
         btn.Click += (sender, e) => MessageBox.Show($"Message Inputted '{textBox.Text ?? ""}'");
     
+        textBox = new TextBox();
+        textBox.Size = new Size((int)(WindowSize.Width / 1.5), WindowSize.Height / 10);
+        textBox.Multiline = true;
+        textBox.Location = new Point(
+            (int)(WindowSize.Width / 10),
+            (int)(WindowSize.Height - 100)
+        );
+
+        textBox.BorderStyle = BorderStyle.FixedSingle;
+
         Controls.Add(btn);
+        Controls.Add(textBox);
     }
 
     public MainForm(string Title, Size WindowSize)
     {
         Text = Title;
+        this.WindowSize = WindowSize;
         Width = WindowSize.Width;
         Height = WindowSize.Height;
         StartPosition = FormStartPosition.CenterScreen;
         this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
-        RenderButtons(WindowSize);
-        RenderTextBox(WindowSize);
+        RenderBase();
+        RenderMessage("Test message");
+        RenderState();
     }
 }
 
